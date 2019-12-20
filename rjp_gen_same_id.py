@@ -10,7 +10,8 @@ def parseArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('--idcard-dir', type=str, help='Enter the idcard directory.')
     parser.add_argument('--photos-dir', type=str, help='Enter the photos directory.')
-    parser.add_argument('--output-dir', type=str, help='Enter the output directory.')
+    # parser.add_argument('--output-dir', type=str, help='Enter the output directory.')
+    parser.add_argument('--record-path', type=str, help='Enter the record file path to write all the same record to the file.')
     args = parser.parse_args()
     print ("parse args complete")
     return args
@@ -112,7 +113,9 @@ def findCommonIDandPhotos(id_names, id_paths, photo_names, photo_paths):
     print('there is %d same names' %len(same_names_set))
     same_names_list = list(same_names_set)
     random.shuffle(same_names_list)
-    same_names_list = same_names_list[0:3000]
+    need_data_length = len(same_names_set)
+    # need_data_length = 100
+    same_names_list = same_names_list[0:need_data_length]
     time1 = time.time()
     for name in same_names_list:
         id_index = id_names.index(name)
@@ -127,8 +130,10 @@ def findCommonIDandPhotos(id_names, id_paths, photo_names, photo_paths):
         # new_id_paths.append(id_paths[id_index])
         # new_photo_paths.append(photo_paths[photo_index])
         my_count += 1
-        time2 = time.time()
-        print('number %d, time %f' %(my_count, time2 - time1))
+        if my_count >= 1000:
+            my_count = 0
+            time2 = time.time()
+            print('number %d, time %f' %(my_count, time2 - time1))
     
     print('%d %d %d' %(len(new_same_names), len(new_id_paths), len(new_photo_paths)))
     return new_same_names, new_id_paths, new_photo_paths
@@ -174,13 +179,25 @@ def copy2OutputDir(output_dir, new_same_names, new_id_paths, new_photo_paths):
         print('the number %d, total time cost is %f' %(my_count, time2 - time1))
     print('finished copying')
 
+def writeSame2File(record_path, new_same_names, new_id_paths, new_photo_paths):
+    fp = open(record_path, 'w')
+    print('same name number is %d' %(len(new_same_names)))
+    print('new id number is %d' %(len(new_id_paths)))
+    print('new photo number is %d' %(len(new_photo_paths)))
+    for i in range(len(new_same_names)):
+        file_str = new_same_names[i] + ',' + new_id_paths[i] + ',' + new_photo_paths[i] + '\n'
+        fp.writelines(file_str)
+    fp.close()
+    print('finished wirting all the record to the file.')
+
 
 if __name__ == '__main__':
     # parse the args
     args = parseArgs()
     idcard_dir = args.idcard_dir
     photos_dir = args.photos_dir
-    output_dir = args.output_dir
+    # output_dir = args.output_dir
+    record_path = args.record_path
     # get people's idcard number and the path along with people's photo
     id_names, id_paths = getIDResult(idcard_dir)
     photo_names, photo_paths = getPhotoResult(photos_dir)
@@ -193,6 +210,7 @@ if __name__ == '__main__':
     # get the intersection of id and photo names
     new_same_names, new_id_paths, new_photo_paths = findCommonIDandPhotos(id_names, id_paths, photo_names, photo_paths)
     # start copying the IDcard images and photos to the output-dir
-    copy2OutputDir(output_dir, new_same_names, new_id_paths, new_photo_paths)
+    writeSame2File(record_path, new_same_names, new_id_paths, new_photo_paths)
+    # copy2OutputDir(output_dir, new_same_names, new_id_paths, new_photo_paths)
     
     print ('finished all')
