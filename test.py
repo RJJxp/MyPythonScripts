@@ -3,6 +3,8 @@ import itertools
 import time
 from PIL import Image as PilImage
 import imageio
+
+print('1' == 1)
 # s = "rjp_0001.jpg"
 # folder_1 = "/home/rjp/Documents"
 # folder_2 = "/home/rjp/Documents/test1"
