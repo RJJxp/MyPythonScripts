@@ -14,6 +14,10 @@ s = "rjp_0001.jpg"
 # s2 = [6, 6, 1, 4, 5]
 # s3 = [9, 1, 4, 5, 3]
 print (s[-8:-4])
+# s = "rjp_0001.jpg"
+# folder_1 = "/home/rjp/Documents"
+# folder_2 = "/home/rjp/Documents/test1"
+# folder_3 = "/home/rjp/Documents/test1/test2"
 
 # ss = s3[-3:-1]
 # print(ss)
@@ -34,3 +38,5 @@ print (s[-8:-4])
 #     print(comb[0])
 #     print(comb[1])
 
+for i in range(3, 5):
+    print(i)
