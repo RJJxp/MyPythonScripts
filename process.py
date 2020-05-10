@@ -4,7 +4,7 @@ import argparse
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input-path', default='', type=str, help='')
-    parser.add_argument('--output-path', default='', type=str, help='')
+    parser.add_argument('--output-path', default='output.txt', type=str, help='')
     print('finished parsing args.')
     return parser.parse_args()
 
