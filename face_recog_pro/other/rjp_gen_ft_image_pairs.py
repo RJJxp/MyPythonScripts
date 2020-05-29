@@ -53,30 +53,16 @@ def generatePairs(input_dir, same_pair_num, diff_pair_num):
         person_01_name = person_names[diff_comb[0]]
         person_02_name = person_names[diff_comb[1]]
         person_01_images = os.listdir(os.path.join(input_dir, person_01_name))
-        # person_02_images = os.listdir(os.path.join(input_dir, person_02_name))
+        person_02_images = os.listdir(os.path.join(input_dir, person_02_name))
         person_01_id = getImageId(random.sample(person_01_images, 1)[0])
-        # person_02_id = getImageId(random.sample(person_02_images, 1)[0])
-        # make sure person1-01, person2-02 or person1-02, person2-01
-        if (person_01_id == '1'):
-            pair_string = person_01_name + "\t" + person_01_id + "\t" + person_02_name + "\t" + "2" + "\n"
-            diff_lines.append(pair_string)
-            gen_diff_count_n += 1
-        elif (person_01_id == '2'):
-            pair_string = person_01_name + "\t" + person_01_id + "\t" + person_02_name + "\t" + "1" + "\n"
-            diff_lines.append(pair_string)
-            gen_diff_count_n += 1
-        else:
-            continue
+        person_02_id = getImageId(random.sample(person_02_images, 1)[0])
 
+        pair_string = person_01_name + "\t" + person_01_id + "\t" + person_02_name + "\t" + person_02_id + "\n"
+        diff_lines.append(pair_string)
+        gen_diff_count_n += 1
+        
         if (gen_diff_count_n % 1000 == 0):
             print("diff pair +1000")
-
-        # if ((person_01_id == '1' and person_02_id != '1') or (person_01_id != '1' and person_02_id == '1')):
-        #     pair_string = person_01_name + "\t" + person_01_id + "\t" + person_02_name + "\t" + person_02_id + "\n"
-        #     diff_lines.append(pair_string)
-        #     print('diff person pair +1s')
-        # else:
-        #     continue
 
     # get the finallines and disorder it
     lines += diff_lines
