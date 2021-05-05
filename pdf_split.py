@@ -36,7 +36,7 @@ def splitPDF(split_list, pdf_file, output_dir):
         end_p = split_list[i+1]
         for ii in range(start_p, end_p):
             pdf_writer.addPage(pdf_file.getPage(ii))
-        output_path = output_dir + "split" + ("_%s" % (start_p+1)) + ("_%s" % end_p) + ".pdf"
+        output_path = output_dir + "split" + ("_%04d" % (start_p+1)) + ("_%04d" % end_p) + ".pdf"
         print(output_path)
         output_stream = open(output_path, 'wb')
         pdf_writer.write(output_stream)
