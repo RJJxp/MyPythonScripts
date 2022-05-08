@@ -1,0 +1,5 @@
+D:\RJP_stuff\20211213_srtestdata\test02\5377_05_BC.png
+D:\RJP_stuff\20211213_srtestdata\test02\5377_05_SR.png
+D:\RJP_stuff\20211213_srtestdata\test02\5377_05_GT.png
+123 55 523 78
+555 154 777 233

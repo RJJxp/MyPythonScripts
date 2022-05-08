@@ -4,6 +4,9 @@ import sys
 import numpy as np
 import shutil
 import cv2 as cv
+from skimage import metrics
+from skimage import io
+
 
 #  Remeber to modify `width` and `height`
 class ImgResize:
@@ -255,5 +258,91 @@ class ImgRename:
             outpath = os.path.join(outdir, out_name)
             shutil.copy(inpath, outpath)
         print("Finished copy and rename HR dataset")
+
+class ImgMeanStd:
+    # cal rgb_mean 
+    def __init__(self) -> None:
+        pass
+
+    # for png
+    def calRGB_mean(self, input_dir):
+        r_total = 0.0
+        g_total = 0.0
+        b_total = 0.0
+        N_total = 0
+        rgb_range = 255
+        img_names = os.listdir(input_dir)
+        img_number = len(img_names)
+        for img_name in img_names:
+            img_path = os.path.join(input_dir, img_name)
+            img = cv.imread(img_path)
+            img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+            img = np.array(img)
+            h, w, c = img.shape
+            N_total += h * w
+            r = img[:, :, 0]
+            r_total += np.sum(r)
+            g = img[:, :, 1]
+            g_total += np.sum(g)
+            b = img[:, :, 2]
+            b_total += np.sum(b)
+
+        print("There is %d img" %img_number)
+        print("rgb total: %f %f %f" %(r_total, g_total, b_total))
+        print("total pixel number: %d" %(N_total))
+        r_mean = r_total / N_total
+        g_mean = g_total / N_total
+        b_mean = b_total / N_total
+        print("rgb_mean is: ")
+        print("r_mean: %f" %r_mean)
+        print("g_mean: %f" %g_mean)
+        print("b_mean: %f" %b_mean)
+        print("rgb_mean by range: ")
+        print("r_mean: %f" %(r_mean / rgb_range))
+        print("g_mean: %f" %(g_mean / rgb_range))
+        print("b_mean: %f" %(b_mean / rgb_range))
+
+class ImgMetrics:
+    def __init__(self) -> None:
+        pass
+    
+    def cal_psnr_ssim(self, img_path01, img_path02):
+        img01 = io.imread(img_path01)
+        img02 = io.imread(img_path02)
+        ssim_value = metrics.structural_similarity(img01, img02, data_range=255, channel_axis=2)
+        psnr_value = metrics.peak_signal_noise_ratio(img01, img02, data_range=255)
+        return psnr_value, ssim_value
+
+    def cal_psnr_ssim_folder(self, sr_dir, gt_dir):
+        sr_img_names = os.listdir(sr_dir)
+        gt_img_names = os.listdir(gt_dir)
+        assert len(sr_img_names) == len(gt_img_names)
+        sr_img_names = sorted(sr_img_names)
+        gt_img_names = sorted(gt_img_names)
+        psnr_list = []
+        ssim_list = []
+        for sr_img_name, gt_img_name in zip(sr_img_names, gt_img_names):
+            print("%s %s" %(sr_img_name, gt_img_name))
+            sr_img_path = os.path.join(sr_dir, sr_img_name)
+            gt_img_path = os.path.join(gt_dir, gt_img_name)
+            psnr, ssim = self.cal_psnr_ssim(sr_img_path, gt_img_path)
+            psnr_list.append(psnr)
+            ssim_list.append(ssim)
+            print("psnr: %f" %psnr)
+            print("ssim: %f" %ssim)
+        average_psnr = sum(psnr_list) / len(sr_img_names)
+        average_ssim = sum(ssim_list) / len(sr_img_names)
+        print("average pnsr: %f" %average_psnr)
+        print("average ssim: %f" %average_ssim)
+
+        
+
+        
+
+
+
+
+
+
         
 
